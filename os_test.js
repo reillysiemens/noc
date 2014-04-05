@@ -12,9 +12,9 @@ var fs = require('fs');
 var net = require('net');
 var colors = require('colors');
 
-//var ports = [22, 135, 3389, 1022, 554];
+var ports = [22, 135, 3389, 1022, 554];
 
-function portProbe(port, host, timeout) {
+function portProbe(port, host, timeout, callback) {
     var socket = new net.Socket(),
         status = null
 
@@ -35,25 +35,50 @@ function portProbe(port, host, timeout) {
         status = 'closed'
     })
 
-    socket.on('close', function() {
-        if (status == 'open') {
-            console.log(host.green + ':'.green + port.toString().green + ' is open.'.green);
+    socket.on('close', function () {
+        if (status == 'closed') {
+            console.log(host.red);
+            //console.log(host + " is down");
         } else {
-            console.log(host.red + ':'.red + port.toString().red + ' is closed.'.red);
+            switch(port) {
+                case 22:
+                    console.log(host.green);
+                    //console.log(host + " is in linux");
+                    break;
+                case 135:
+                    console.log(host.blue);
+                    //console.log(host + " is in windows 8");
+                    break;
+                case 3389:
+                    console.log(host.cyan);
+                    //console.log(host + " is in windows 7");
+                    break;
+                case 1022:
+                    console.log(host.magenta);
+                    //console.log(host + " is a server");
+                    break;
+                case 554:
+                    console.log(host.yellow);
+                    //console.log(host + " is a camera");
+                    break;
+                default:
+                    console.log(host.red);
+                    //console.log(host + " is not real");
+            }
         }
     })
 
     socket.connect(port, host)
 }
 
-var hostname = "linux-02",
+var hostname = "cf414-02",
     timeout = 100;
 
-portProbe(22, hostname, timeout);
-portProbe(135, hostname, timeout);
-portProbe(3389, hostname, timeout);
-portProbe(1022, hostname, timeout);
-portProbe(554, hostname, timeout);
+//portProbe(22, hostname, timeout);
+//portProbe(135, hostname, timeout);
+//portProbe(3389, hostname, timeout);
+//portProbe(1022, hostname, timeout);
+//portProbe(554, hostname, timeout);
 
 //fs.readFile('./cf414', 'utf8', function(err, data) {
 //    if (err) throw err;
