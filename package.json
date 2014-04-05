@@ -1,0 +1,15 @@
+{
+  "name": "noc",
+  "version": "0.0.1",
+  "description": "Network Operations Center",
+  "main": "os_test.js",
+  "dependencies": {
+    "colors": "~0.6.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Reilly Tucker Siemens",
+  "license": "MIT"
+}
