@@ -1,22 +1,25 @@
 #!/usr/bin/env node
 
 /*
- * Linux     ->   22
- * Windows 8 ->  135
- * Windows 7 -> 3389
- * Server    -> 1022
- * Camera    ->  554
+ * Linux        ->   22 -> green
+ * Windows 8    ->  135 -> blue
+ * Windows 7    -> 3389 -> cyan
+ * Server       -> 1022 -> magenta
+ * Camera       ->  554 -> yellow
+ * Unresponsive -> ???? -> red
 */
 
-var fs = require('fs');
-var net = require('net');
-var colors = require('colors');
+var fs = require('fs'),
+    net = require('net'),
+    async = require('async'),
+    colors = require('colors');
 
 var ports = [22, 135, 3389, 1022, 554];
 
 function portProbe(port, host, timeout, callback) {
     var socket = new net.Socket(),
-        status = null
+        status = null,
+        error = null
 
     socket.setTimeout(timeout)
 
@@ -36,49 +39,42 @@ function portProbe(port, host, timeout, callback) {
     })
 
     socket.on('close', function () {
-        if (status == 'closed') {
-            console.log(host.red);
-            //console.log(host + " is down");
-        } else {
-            switch(port) {
-                case 22:
-                    console.log(host.green);
-                    //console.log(host + " is in linux");
-                    break;
-                case 135:
-                    console.log(host.blue);
-                    //console.log(host + " is in windows 8");
-                    break;
-                case 3389:
-                    console.log(host.cyan);
-                    //console.log(host + " is in windows 7");
-                    break;
-                case 1022:
-                    console.log(host.magenta);
-                    //console.log(host + " is a server");
-                    break;
-                case 554:
-                    console.log(host.yellow);
-                    //console.log(host + " is a camera");
-                    break;
-                default:
-                    console.log(host.red);
-                    //console.log(host + " is not real");
-            }
-        }
+        callback(error, status)
     })
 
     socket.connect(port, host)
 }
 
-var hostname = "cf414-02",
+var port = 22,
+    hostname = "cf405-02",
     timeout = 100;
 
-//portProbe(22, hostname, timeout);
-//portProbe(135, hostname, timeout);
-//portProbe(3389, hostname, timeout);
-//portProbe(1022, hostname, timeout);
-//portProbe(554, hostname, timeout);
+portProbe(port, hostname, timeout, function(error, status) {
+    if (status == 'closed') {
+        console.log(hostname.red);
+    } else {
+        switch(port) {
+            case 22:
+                console.log(hostname.green);
+                break;
+            case 135:
+                console.log(hostname.blue);
+                break;
+            case 3389:
+                console.log(hostname.cyan);
+                break;
+            case 1022:
+                console.log(hostname.magenta);
+                break;
+            case 554:
+                console.log(hostname.yellow);
+                break;
+            default:
+                console.log(hostname.red);
+        }
+    }
+    if (error) console.error(error);
+})
 
 //fs.readFile('./cf414', 'utf8', function(err, data) {
 //    if (err) throw err;

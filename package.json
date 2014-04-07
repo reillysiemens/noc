@@ -4,7 +4,8 @@
   "description": "Network Operations Center",
   "main": "os_test.js",
   "dependencies": {
-    "colors": "~0.6.2"
+    "colors": "~0.6.2",
+    "async": "^0.7.0"
   },
   "devDependencies": {},
   "scripts": {
