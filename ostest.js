@@ -51,6 +51,8 @@ function osTest(ports, host, timeout, callback) {
     var portIndex = 0
     var port = ports[portIndex]
 
+    if (host == '') { return };
+
     var hasFoundPort = function () {
         return foundPort || numberOfPortsChecked === (ports.length - 1)
     }
@@ -71,11 +73,11 @@ function osTest(ports, host, timeout, callback) {
 
     async.until(hasFoundPort, checkNextPort, function(error) {
         if (error) {
-            callback(error, port)
+            callback(error, {port: port, host: host})
         } else if (foundPort) {
-            callback(null, port)
+            callback(null, {port: port, host: host})
         } else {
-            callback(null, false)
+            callback(null, {port: false, host: host})
         }
     })
 }
@@ -83,33 +85,33 @@ function osTest(ports, host, timeout, callback) {
 fs.readFile(process.argv[2], 'utf8', function(err, data) {
     if (err) throw err;
     var hosts = data.toString().split("\n");
-    for (h in hosts) {
-        osTest(ports, hosts[h], 100, function(error, port) {
-            if (port == false) {
-                console.log(h.red);
+    hosts.forEach(function(host) {
+        osTest(ports, host, 40, function(error, result) {
+            if (result.port == false) {
+                console.log(result.host.red);
             } else {
-                switch(port) {
+                switch(result.port) {
                     case 22:
-                        console.log(h.green);
+                        console.log(result.host.green);
                         break;
                     case 135:
-                        console.log(h.blue);
+                        console.log(result.host.blue);
                         break;
                     case 3389:
-                        console.log(h.cyan);
+                        console.log(result.host.cyan);
                         break;
                     case 1022:
-                        console.log(h.magenta);
+                        console.log(result.host.magenta);
                         break;
                     case 554:
-                        console.log(h.yellow);
+                        console.log(result.host.yellow);
                         break;
                     default:
-                        console.log(h.red);
+                        console.log(result.host.red);
                 }
             }
             //console.log('Found an open port at ' + port)
             //if (error) console.error(error);
         })
-    }
+    })
 });
