@@ -82,36 +82,36 @@ function osTest(ports, host, timeout, callback) {
     })
 }
 
+function processHost(host) {
+    osTest(ports, host, 40, function(error, port) {
+        if (port == false) {
+            console.log(host.red);
+        } else {
+            switch(port) {
+                case 22:
+                    console.log(host.green);
+                    break;
+                case 135:
+                    console.log(host.blue);
+                    break;
+                case 3389:
+                    console.log(host.cyan);
+                    break;
+                case 1022:
+                    console.log(host.magenta);
+                    break;
+                case 554:
+                    console.log(host.yellow);
+                    break;
+                default:
+                    console.log(host.red);
+            }
+        }
+    })
+}
+
 fs.readFile(process.argv[2], 'utf8', function(err, data) {
     if (err) throw err;
     var hosts = data.toString().split("\n");
-    hosts.forEach(function(host) {
-        osTest(ports, host, 40, function(error, port) {
-            if (port == false) {
-                console.log(host.red);
-            } else {
-                switch(port) {
-                    case 22:
-                        console.log(host.green);
-                        break;
-                    case 135:
-                        console.log(host.blue);
-                        break;
-                    case 3389:
-                        console.log(host.cyan);
-                        break;
-                    case 1022:
-                        console.log(host.magenta);
-                        break;
-                    case 554:
-                        console.log(host.yellow);
-                        break;
-                    default:
-                        console.log(host.red);
-                }
-            }
-            //console.log('Found an open port at ' + port)
-            //if (error) console.error(error);
-        })
-    })
+    hosts.forEach(processHost);
 });
