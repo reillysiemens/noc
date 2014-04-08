@@ -45,42 +45,71 @@ function portProbe(port, host, timeout, callback) {
     socket.connect(port, host)
 }
 
-var port = 22,
-    hostname = "cf405-02",
-    timeout = 100;
+function osTest(ports, host, timeout, callback) {
+    var foundPort = false
+    var numberOfPortsChecked = 0
+    var portIndex = 0
+    var port = ports[portIndex]
 
-portProbe(port, hostname, timeout, function(error, status) {
-    if (status == 'closed') {
-        console.log(hostname.red);
-    } else {
-        switch(port) {
-            case 22:
-                console.log(hostname.green);
-                break;
-            case 135:
-                console.log(hostname.blue);
-                break;
-            case 3389:
-                console.log(hostname.cyan);
-                break;
-            case 1022:
-                console.log(hostname.magenta);
-                break;
-            case 554:
-                console.log(hostname.yellow);
-                break;
-            default:
-                console.log(hostname.red);
-        }
+    var hasFoundPort = function () {
+        return foundPort || numberOfPortsChecked === (ports.length - 1)
     }
-    if (error) console.error(error);
-})
 
-//fs.readFile('./cf414', 'utf8', function(err, data) {
-//    if (err) throw err;
-//    //console.log(data);
-//    var array = data.toString().split("\n");
-//    for (i in array) {
-//        portProbe(22, array[i], 1000);
-//    }
-//});
+    var checkNextPort = function(callback) {
+        portProbe(port, host, timeout, function(error, statusOfPort) {
+            numberOfPortsChecked++
+            if (statusOfPort === 'open') {
+                foundPort = true
+                callback(error)
+            } else {
+                portIndex++
+                port = ports[portIndex]
+                callback(null)
+            }
+        })
+    }
+
+    async.until(hasFoundPort, checkNextPort, function(error) {
+        if (error) {
+            callback(error, port)
+        } else if (foundPort) {
+            callback(null, port)
+        } else {
+            callback(null, false)
+        }
+    })
+}
+
+fs.readFile(process.argv[2], 'utf8', function(err, data) {
+    if (err) throw err;
+    var hosts = data.toString().split("\n");
+    for (h in hosts) {
+        osTest(ports, hosts[h], 100, function(error, port) {
+            if (port == false) {
+                console.log(h.red);
+            } else {
+                switch(port) {
+                    case 22:
+                        console.log(h.green);
+                        break;
+                    case 135:
+                        console.log(h.blue);
+                        break;
+                    case 3389:
+                        console.log(h.cyan);
+                        break;
+                    case 1022:
+                        console.log(h.magenta);
+                        break;
+                    case 554:
+                        console.log(h.yellow);
+                        break;
+                    default:
+                        console.log(h.red);
+                }
+            }
+            //console.log('Found an open port at ' + port)
+            //if (error) console.error(error);
+        })
+    }
+});
