@@ -14,7 +14,8 @@ var fs = require('fs'),
     async = require('async'),
     colors = require('colors');
 
-var ports = [22, 135, 3389, 1022, 554];
+var ports = [22, 135, 3389, 1022, 554],
+    timeout = 40;
 
 function portProbe(port, host, timeout, callback) {
     var socket = new net.Socket(),
@@ -83,7 +84,7 @@ function osTest(ports, host, timeout, callback) {
 }
 
 function processHost(host) {
-    osTest(ports, host, 40, function(error, port) {
+    osTest(ports, host, timeout, function(error, port) {
         if (port == false) {
             console.log(host.red);
         } else {
