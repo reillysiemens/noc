@@ -11,6 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Reilly Tucker Siemens",
-  "license": "MIT"
+  "author": "Reilly Tucker Siemens <reilly.siemens@gmail.com>",
+  "license": "MIT",
+  "private": true
 }
