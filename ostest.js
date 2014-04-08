@@ -73,11 +73,11 @@ function osTest(ports, host, timeout, callback) {
 
     async.until(hasFoundPort, checkNextPort, function(error) {
         if (error) {
-            callback(error, {port: port, host: host})
+            callback(error, port)
         } else if (foundPort) {
-            callback(null, {port: port, host: host})
+            callback(null, port)
         } else {
-            callback(null, {port: false, host: host})
+            callback(null, false)
         }
     })
 }
@@ -86,28 +86,28 @@ fs.readFile(process.argv[2], 'utf8', function(err, data) {
     if (err) throw err;
     var hosts = data.toString().split("\n");
     hosts.forEach(function(host) {
-        osTest(ports, host, 40, function(error, result) {
-            if (result.port == false) {
-                console.log(result.host.red);
+        osTest(ports, host, 40, function(error, port) {
+            if (port == false) {
+                console.log(host.red);
             } else {
-                switch(result.port) {
+                switch(port) {
                     case 22:
-                        console.log(result.host.green);
+                        console.log(host.green);
                         break;
                     case 135:
-                        console.log(result.host.blue);
+                        console.log(host.blue);
                         break;
                     case 3389:
-                        console.log(result.host.cyan);
+                        console.log(host.cyan);
                         break;
                     case 1022:
-                        console.log(result.host.magenta);
+                        console.log(host.magenta);
                         break;
                     case 554:
-                        console.log(result.host.yellow);
+                        console.log(host.yellow);
                         break;
                     default:
-                        console.log(result.host.red);
+                        console.log(host.red);
                 }
             }
             //console.log('Found an open port at ' + port)
