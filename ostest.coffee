@@ -47,8 +47,7 @@ osTest = (ports, host, timeout, callback) ->
   portIndex = 0
   port = ports[portIndex]
 
-  if host == ''
-    return
+  if host == '' then return
 
   hasFoundPort = () ->
     return foundPort or numberOfPortsChecked is (ports.length - 1)
