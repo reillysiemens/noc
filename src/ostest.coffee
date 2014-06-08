@@ -12,7 +12,7 @@ Unresponsive -> ???? -> red
 fs = require 'fs'
 net = require 'net'
 async = require 'async'
-colors = require 'colors'
+chalk = require 'chalk'
 
 ports = [22, 135, 3389, 1022, 554]
 timeout = 40
@@ -74,15 +74,15 @@ osTest = (ports, host, timeout, callback) ->
 processHost = (host) ->
   osTest ports, host, timeout, (error, port) ->
     if port is false
-      console.log host.red
+      console.log chalk.red host
     else
       switch port
-        when 22 then console.log host.green
-        when 135 then console.log host.blue
-        when 3389 then console.log host.cyan
-        when 1022 then console.log  host.magenta
-        when 554 then console.log host.yellow
-        else console.log host.red
+        when 22 then console.log chalk.green host
+        when 135 then console.log chalk.blue host
+        when 3389 then console.log chalk.cyan host
+        when 1022 then console.log chalk.magenta host
+        when 554 then console.log chalk.yellow host
+        else console.log chalk.red host
 
 fs.readFile process.argv[2], 'utf-8', (err, data) ->
   if err then throw err
