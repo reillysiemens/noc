@@ -47,7 +47,7 @@ osTest = (ports, host, timeout, callback) ->
   portIndex = 0
   port = ports[portIndex]
 
-  if host == '' then return
+  if host is '' then return
 
   hasFoundPort = () ->
     return foundPort or numberOfPortsChecked is (ports.length - 1)
@@ -87,4 +87,4 @@ processHost = (host) ->
 fs.readFile process.argv[2], 'utf-8', (err, data) ->
   if err then throw err
   hosts = data.toString().split '\n'
-  hosts.forEach processHost
+  processHost host for host in hosts
