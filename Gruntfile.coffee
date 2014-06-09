@@ -5,13 +5,13 @@ module.exports = (grunt) ->
     coffee:
       compile:
         files:
-          'lib/ostest.js': 'src/ostest.coffee'
+          'lib/ostest.js': 'src/ostest.iced'
 
     jshint:
       all: ['lib/**/*.js']
 
   # Load grunt plugins
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
+  grunt.loadNpmTasks 'grunt-iced-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
 
   # Default task(s)
