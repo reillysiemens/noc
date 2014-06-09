@@ -7,8 +7,12 @@ module.exports = (grunt) ->
         files:
           'lib/ostest.js': 'src/ostest.coffee'
 
-  # Load the plugin that provides the "compile" task
+    jshint:
+      all: ['lib/**/*.js']
+
+  # Load grunt plugins
   grunt.loadNpmTasks 'grunt-contrib-coffee'
+  grunt.loadNpmTasks 'grunt-contrib-jshint'
 
   # Default task(s)
-  grunt.registerTask 'default', ['coffee']
+  grunt.registerTask 'default', ['coffee', 'jshint']
