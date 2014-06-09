@@ -35,6 +35,7 @@ portProbe = (port, host, timeout, callback) ->
   socket.on 'error', (exception) ->
     error = exception
     status = 'closed'
+    return
 
   socket.on 'close', () ->
     callback error, status
